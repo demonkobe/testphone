@@ -1,0 +1,25 @@
+{
+  "name": "Tra cứu Đối thủ cạnh tranh - Vật tư y tế",
+  "short_name": "Tra cứu ĐTCT",
+  "description": "Ứng dụng tra cứu đối thủ cạnh tranh trong ngành vật tư y tế",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#0f2a4a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
