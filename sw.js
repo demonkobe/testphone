@@ -2,12 +2,17 @@
 // - Cache các file tĩnh (index.html, manifest.json) để dùng offline
 // - data.json luôn lấy mới từ mạng (không cache), tránh hiện dữ liệu cũ
 
-const CACHE_NAME = 'tra-cuu-dtct-v1';
+// QUAN TRỌNG: đổi số version này (v2, v3, v4...) MỖI KHI deploy code mới lên GitHub.
+// Nếu không đổi, trình duyệt cũ của bạn/người dùng sẽ tiếp tục dùng bản index.html
+// cache cũ dù file thật trên server đã thay đổi -> ra số liệu khác nhau như bạn gặp.
+const CACHE_NAME = 'tra-cuu-dtct-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
 ];
+// Các request luôn ưu tiên lấy MỚI từ mạng trước (chỉ fallback về cache khi mất mạng)
+const NETWORK_FIRST = ['index.html', './', 'manifest.json'];
 
 // Cài đặt: cache trước các file tĩnh của app
 self.addEventListener('install', (event) => {
@@ -42,13 +47,34 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const isAppShell =
+    url.pathname.endsWith('index.html') ||
+    url.pathname.endsWith('manifest.json') ||
+    url.pathname === new URL('./', self.registration.scope).pathname;
+
+  if (isAppShell) {
+    // network-first: luôn thử lấy bản mới nhất, chỉ dùng cache khi mất mạng
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (event.request.method === 'GET' && response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Các file tĩnh khác (icon, css, js phụ...): cache-first như cũ
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return (
         cached ||
         fetch(event.request)
           .then((response) => {
-            // Lưu thêm vào cache cho lần sau (chỉ với request GET hợp lệ)
             if (event.request.method === 'GET' && response && response.status === 200) {
               const responseClone = response.clone();
               caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
