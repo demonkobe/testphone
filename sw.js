@@ -5,7 +5,7 @@
 // QUAN TRỌNG: đổi số version này (v2, v3, v4...) MỖI KHI deploy code mới lên GitHub.
 // Nếu không đổi, trình duyệt cũ của bạn/người dùng sẽ tiếp tục dùng bản index.html
 // cache cũ dù file thật trên server đã thay đổi -> ra số liệu khác nhau như bạn gặp.
-const CACHE_NAME = 'tra-cuu-dtct-v2';
+const CACHE_NAME = 'tra-cuu-dtct-v3';
 const APP_SHELL = [
   './',
   './index.html',
